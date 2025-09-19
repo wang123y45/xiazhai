@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鲸鸿资源网 - 资源中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .logo span {
+            color: #ffeb3b;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .admin-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .admin-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background: #2196f3;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-footer {
+            padding: 15px;
+            background: #f9f9f9;
+            text-align: center;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+        
+        .btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            background: #1976d2;
+        }
+        
+        .btn-copy {
+            background: #4caf50;
+        }
+        
+        .btn-copy:hover {
+            background: #388e3c;
+        }
+        
+        .resource-link {
+            display: none;
+            margin-top: 15px;
+        }
+        
+        .link-box {
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            word-break: break-all;
+            font-size: 14px;
+        }
+        
+        .extract-code {
+            font-weight: bold;
+            color: #d32f2f;
+            margin-top: 5px;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal h2 {
+            margin-bottom: 15px;
+            color: #2196f3;
+        }
+        
+        .modal-close {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">鲸鸿<span>资源网</span></div>
+            <p class="subtitle">优质资源，安全可靠</p>
+            <a href="#" class="admin-link" id="adminLink">管理员入口</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>资源列表</h2>
+        <p>请输入对应密码访问资源（每个密码只能使用一次）</p>
+        
+        <div class="resources-grid" id="resourcesGrid">
+            <!-- 资源卡片将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <!-- 管理员提示模态框 -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <h2>提示</h2>
+            <p>微信关注鲸美电商服务号获取更多资源</p>
+            <button class="modal-close" onclick="closeModal()">关闭</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 鲸鸿资源网 - 所有资源仅供学习交流使用</p>
+        </div>
+    </footer>
+
+    <!-- 引入资源数据 -->
+    <script src="resources.js"></script>
+    
+    <script>
+        // 初始化资源数据
+        function initializeResources() {
+            if (!localStorage.getItem('resourceData')) {
+                // 使用resources.js中定义的资源数据
+                const resourceData = window.resourceData || [];
+                localStorage.setItem('resourceData', JSON.stringify(resourceData));
+            }
+        }
+
+        // 显示资源卡片
+        function displayResources() {
+            const resourceData = JSON.parse(localStorage.getItem('resourceData'));
+            const resourcesGrid = document.getElementById('resourcesGrid');
+            resourcesGrid.innerHTML = '';
+
+            resourceData.forEach(resource => {
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+                card.innerHTML = `
+                    <div class="card-header">${resource.title}</div>
+                    <div class="card-body">
+                        <div class="message error" id="error-${resource.id}">密码错误或已使用</div>
+                        <div class="message success" id="success-${resource.id}">密码正确</div>
+                        <input type="password" class="password-input" id="input-${resource.id}" placeholder="请输入6位密码">
+                        <button class="btn" onclick="checkPassword(${resource.id})">验证密码</button>
+                        <div class="resource-link" id="link-${resource.id}">
+                            <div class="link-box">
+                                <strong>资源链接：</strong><br>
+                                <span id="resource-link-${resource.id}">${resource.link}</span>
+                                ${resource.extractCode ? `<div class="extract-code">提取码: ${resource.extractCode}</div>` : ''}
+                            </div>
+                            <button class="btn btn-copy" onclick="copyLink(${resource.id})">复制链接</button>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small>密码使用状态: ${resource.used ? '已使用' : '未使用'}</small>
+                    </div>
+                `;
+                resourcesGrid.appendChild(card);
+            });
+        }
+
+        // 检查密码
+        function checkPassword(id) {
+            const resourceData = JSON.parse(localStorage.getItem('resourceData'));
+            const resourceIndex = resourceData.findIndex(r => r.id === id);
+            
+            if (resourceIndex === -1) return;
+            
+            const resource = resourceData[resourceIndex];
+            const input = document.getElementById(`input-${id}`);
+            const errorMsg = document.getElementById(`error-${id}`);
+            const successMsg = document.getElementById(`success-${id}`);
+            const linkDiv = document.getElementById(`link-${id}`);
+            
+            if (resource.used) {
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+                return;
+            }
+            
+            if (input.value === resource.password) {
+                // 密码正确
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+                linkDiv.style.display = 'block';
+                
+                // 标记为已使用并生成新密码
+                resourceData[resourceIndex].used = true;
+                resourceData[resourceIndex].password = generateRandomPassword();
+                localStorage.setItem('resourceData', JSON.stringify(resourceData));
+            } else {
+                // 密码错误
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            }
+        }
+
+        // 生成6位随机密码
+        function generateRandomPassword() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // 复制链接到剪贴板
+        function copyLink(id) {
+            const resourceData = JSON.parse(localStorage.getItem('resourceData'));
+            const resource = resourceData.find(r => r.id === id);
+            const linkElement = document.getElementById(`resource-link-${id}`);
+            
+            if (!resource || !linkElement) return;
+            
+            const textToCopy = resource.extractCode ? 
+                `${resource.link} 提取码: ${resource.extractCode}` : resource.link;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('链接已复制到剪贴板');
+            }).catch(err => {
+                console.error('无法复制文本: ', err);
+            });
+        }
+
+        // 显示模态框
+        function showModal() {
+            document.getElementById('adminModal').style.display = 'flex';
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        // 初始化
+        document.getElementById('adminLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            showModal();
+        });
+
+        initializeResources();
+        displayResources();
+    </script>
+</body>
+</html>
