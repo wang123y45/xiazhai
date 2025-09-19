@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鲸鸿资源网 - 管理页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .logo span {
+            color: #ffeb3b;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .user-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .user-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .admin-panel {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .add-resource {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .resource-list {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            color: #2e7d32;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: #43a047;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background: #2e7d32;
+        }
+        
+        .btn-generate {
+            background: #ff9800;
+            padding: 8px 12px;
+            font-size: 14px;
+            width: auto;
+        }
+        
+        .btn-generate:hover {
+            background: #f57c00;
+        }
+        
+        .resource-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+        
+        .resource-title {
+            font-weight: bold;
+        }
+        
+        .resource-password {
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            color: #d32f2f;
+        }
+        
+        .resource-status {
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .status-used {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-unused {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .resource-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">鲸鸿<span>资源网</span></div>
+            <p class="subtitle">管理员控制面板</p>
+            <a href="index.html" class="user-link">返回用户页面</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="admin-panel">
+            <div class="add-resource">
+                <h2>添加新资源</h2>
+                <div class="message success" id="addSuccess">资源添加成功！</div>
+                <form onsubmit="addResource(event)">
+                    <div class="form-group">
+                        <label for="title">资源标题</label>
+                        <input type="text" id="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="link">资源链接</label>
+                        <input type="text" id="link" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="extractCode">提取码（可选）</label>
+                        <input type="text" id="extractCode">
+                    </div>
+                    <button type="submit" class="btn">添加资源并生成密码</button>
+                </form>
+            </div>
+            
+            <div class="resource-list">
+                <h2>资源与密码列表</h2>
+                <div id="resourcesList">
+                    <!-- 资源列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 鲸鸿资源网 - 管理员页面</p>
+            <p>注意：此页面包含敏感信息，请妥善保管</p>
+        </div>
+    </footer>
+
+    <!-- 引入资源数据 -->
+    <script src="resources.js"></script>
+    
+    <script>
+        // 生成6位随机密码
+        function generateRandomPassword() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // 添加资源
+        function addResource(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const link = document.getElementById('link').value;
+            const extractCode = document.getElementById('extractCode').value;
+            
+            // 获取现有资源或初始化
+            let resourceData = localStorage.getItem('resourceData') ? 
+                JSON.parse(localStorage.getItem('resourceData')) : [];
+            
+            // 创建新资源
+            const newResource = {
+                id: resourceData.length > 0 ? Math.max(...resourceData.map(r => r.id)) + 1 : 1,
+                title: title,
+                link: link,
+                extractCode: extractCode,
+                password: generateRandomPassword(),
+                used: false
+            };
+            
+            // 添加到资源列表
+            resourceData.push(newResource);
+            localStorage.setItem('resourceData', JSON.stringify(resourceData));
+            
+            // 显示成功消息
+            const successMsg = document.getElementById('addSuccess');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+            
+            // 重置表单
+            document.getElementById('title').value = '';
+            document.getElementById('link').value = '';
+            document.getElementById('extractCode').value = '';
+            
+            // 刷新资源列表
+            displayResources();
+        }
+
+        // 为资源生成新密码
+        function generateNewPassword(id) {
+            let resourceData = JSON.parse(localStorage.getItem('resourceData'));
+            const resourceIndex = resourceData.findIndex(r => r.id === id);
+            
+            if (resourceIndex !== -1) {
+                resourceData[resourceIndex].password = generateRandomPassword();
+                resourceData[resourceIndex].used = false;
+                localStorage.setItem('resourceData', JSON.stringify(resourceData));
+                displayResources();
+            }
+        }
+
+        // 显示资源列表
+        function displayResources() {
+            const resourceData = localStorage.getItem('resourceData') ? 
+                JSON.parse(localStorage.getItem('resourceData')) : [];
+            
+            const resourcesList = document.getElementById('resourcesList');
+            resourcesList.innerHTML = '';
+            
+            if (resourceData.length === 0) {
+                resourcesList.innerHTML = '<p>暂无资源</p>';
+                return;
+            }
+            
+            resourceData.forEach(resource => {
+                const resourceItem = document.createElement('div');
+                resourceItem.className = 'resource-item';
+                resourceItem.innerHTML = `
+                    <div class="resource-title">${resource.title}</div>
+                    <div class="resource-password">${resource.password}</div>
+                    <div class="resource-status ${resource.used ? 'status-used' : 'status-unused'}">
+                        ${resource.used ? '已使用' : '未使用'}
+                    </div>
+                    <button class="btn btn-generate" onclick="generateNewPassword(${resource.id})">生成新密码</button>
+                `;
+                resourcesList.appendChild(resourceItem);
+            });
+        }
+
+        // 初始化显示
+        displayResources();
+    </script>
+</body>
+</html>
